@@ -1,0 +1,679 @@
+:root {
+    --primary-color: #e62429;
+    --primary-light: #ff5a5f;
+    --primary-dark: #b01c22;
+    --secondary-color: #202020;
+    --text-color: #333333;
+    --text-light: #767676;
+    --bg-color: #f9f9f9;
+    --card-color: white;
+    --sidebar-width-collapsed: 64px;
+    --sidebar-width-expanded: 240px;
+    --transition-speed: 0.3s;
+    --border-radius: 8px;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  ul {
+    list-style-type: none;
+  }
+  
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    width: var(--sidebar-width-collapsed);
+    background-color: var(--secondary-color);
+    color: white;
+    transition: width var(--transition-speed) ease;
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+  }
+  
+  .sidebar.expanded {
+    width: var(--sidebar-width-expanded);
+  }
+  
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+  
+  .logo-text {
+    margin-left: 12px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+  }
+  
+  .expanded .logo-text {
+    opacity: 1;
+  }
+  
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+  
+  .toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .expanded .toggle-btn i {
+    transform: rotate(180deg);
+  }
+  
+  .sidebar-nav {
+    margin-top: 16px;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+  }
+  
+  .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-item.active {
+    background-color: var(--primary-color);
+  }
+  
+  .nav-item i {
+    font-size: 1.2rem;
+    min-width: 32px;
+    text-align: center;
+  }
+  
+  .nav-text {
+    margin-left: 12px;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+  }
+  
+  .expanded .nav-text {
+    opacity: 1;
+  }
+  
+  /* Main content styles */
+  .main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width-collapsed);
+    padding: 20px;
+    transition: margin-left var(--transition-speed) ease;
+  }
+  
+  .sidebar.expanded + .main-content {
+    margin-left: var(--sidebar-width-expanded);
+  }
+  
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  
+  .search-bar input {
+    border: none;
+    padding: 8px 16px;
+    width: 240px;
+    outline: none;
+  }
+  
+  .search-bar button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  /* Comic grid */
+  .section-latest,
+  .section-popular {
+    margin-bottom: 40px;
+  }
+  
+  h2 {
+    margin-bottom: 16px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+  
+  .comics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+  }
+  
+  .comic-card {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .comic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comic-cover img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .comic-info {
+    padding: 16px;
+  }
+  
+  .comic-info h3 {
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+  
+  .comic-info p {
+    color: var(--text-light);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+  
+  .button-primary {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+  }
+  
+  .button-primary:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  /* Characters grid */
+  .characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 24px;
+  }
+  
+  .character-card {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .character-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .character-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .character-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .character-card h3 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+  }
+  
+  .button-secondary {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .button-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .content-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .search-bar {
+      margin-top: 16px;
+      width: 100%;
+    }
+    
+    .search-bar input {
+      width: 100%;
+    }
+    
+    .comics-grid,
+    .characters-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .sidebar {
+      width: 0;
+    }
+    
+    .sidebar.expanded {
+      width: 100%;
+    }
+    
+    .main-content {
+      margin-left: 0;
+    }
+    
+    .sidebar.expanded + .main-content {
+      margin-left: 0;
+    }
+  }
+
+  /* ==== */
+  /* Стилі для розширених сіток */
+.large-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  
+  /* Стилі для сторінки профілю персонажа */
+  .page-header {
+    margin-bottom: 32px;
+  }
+  
+  .page-subtitle {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-top: 4px;
+  }
+  
+  .character-profile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .character-main-info {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  
+  .character-avatar-large {
+    width: 100%;
+    max-width: 300px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .character-avatar-large img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .character-biography h2,
+  .character-appearances h2 {
+    margin-bottom: 16px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .character-biography h2::after,
+  .character-appearances h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+  
+  .character-appearances {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  
+  /* Стилі для сторінки серії коміксів */
+  .comics-profile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .comics-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  
+  .comics-cover-large {
+    width: 100%;
+    max-width: 250px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .comics-cover-large img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .comics-details h2,
+  .issues-list h2 {
+    margin-bottom: 16px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .comics-details h2::after,
+  .issues-list h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+  
+  .info-list {
+    list-style-type: none;
+  }
+  
+  .info-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .info-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .issues-list {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  
+  .issues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+    margin-top: 16px;
+  }
+  
+  .issue-card {
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .issue-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .issue-cover img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .issue-info {
+    padding: 16px;
+  }
+  
+  .issue-info h3 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+  }
+  
+  /* Стилі для сторінки випуску */
+  .issue-profile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .issue-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  
+  .issue-cover-large {
+    width: 100%;
+    max-width: 250px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  
+  .issue-cover-large img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .issue-details h2,
+  .additional-stories h2,
+  .issue-characters h2 {
+    margin-bottom: 16px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .issue-details h2::after,
+  .additional-stories h2::after,
+  .issue-characters h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 40px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+  
+  .additional-stories,
+  .issue-characters {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  
+  .story-info h3 {
+    margin-bottom: 16px;
+  }
+  
+  /* Стилі для сторінки творців */
+  .creators-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  
+  .creator-card {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .creator-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .creator-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .creator-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .creator-card h3 {
+    margin-bottom: 8px;
+  }
+  
+  .creator-card p {
+    color: var(--text-light);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+  
+  /* Медіа-запити для адаптивності */
+  @media (max-width: 992px) {
+    .character-main-info,
+    .comics-info,
+    .issue-info {
+      grid-template-columns: 1fr;
+    }
+    
+    .character-avatar-large,
+    .comics-cover-large,
+    .issue-cover-large {
+      margin: 0 auto;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .large-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    
+    .issues-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .page-header {
+      text-align: center;
+    }
+    
+    .large-grid,
+    .creators-grid,
+    .issues-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+  }
