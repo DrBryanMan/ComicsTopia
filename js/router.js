@@ -1,21 +1,30 @@
-
 import Navigo from "https://cdn.jsdelivr.net/npm/navigo@8/+esm"
+import { loadData } from "./loadData.js"
+import * as View from "./Views.js"
+// const comicsPath = './public/articles/comics'
 
 const router = new Navigo('/', { hash: true })
 router
-    .on('/articles/characters/:character', (match) => {
-        renderPage('characters', match.data.character)
-    })
-    .on('/articles/comics/:comics', (match) => {
-        const comics_name = match.data.comics.split(' Том')[0] // Дивовижна Людина-павук
-        let vol = match.data.comics.split('Том ')[1] // 1_1 або 1
-        let issue
-        if (vol.length > 1) {
-            [vol, issue] = vol.split(' ')
-            console.log(vol, issue)
-            renderPageData('issue', match.data.comics, comics_name, vol, issue)
+    .on('/comics/:publisher/:id', async (match) => {
+        const notOneShot = match.data.id.split('-')[1]
+        const [series, vol, issue] = match.data.id.split('-')
+            console.log('series:', series, 'vol:', vol, 'issue:', issue)
+        if (vol.split('-')[1]) {
+                console.log('vol:', vol, 'issue:', issue)
+            // loadData('comics', match.data.comics)
+            // renderPageData('issue', match.data.comics, comics_name, vol, issue)
         } else {
-            renderPageData('comics', match.data.comics, comics_name, vol)
+            const comicsData = await loadData('comics', match.data.publisher, series, vol)
+                console.log('issue:', issue)
+                console.log('comicsData:', comicsData)
+            View.issuePage(comicsData, series, vol, issue)
+        }
+        if (notOneShot) {
+            console.log('ComicsSeries')
+            // loadData('comics', match.data.id)
+        } else {
+            console.log('OneShot')
+            // loadData('comics', match.data.id)
         }
     })
     .resolve()

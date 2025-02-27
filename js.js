@@ -1,417 +1,546 @@
-import Navigo from "https://cdn.jsdelivr.net/npm/navigo@8/+esm"
+import '/js/router.js';
+import '/js/main.js';
 
-// Ініціалізація роутера
-const router = new Navigo('/', { hash: true });
 
-// DOM елементи
-const sidebar = document.querySelector('.sidebar');
-const toggleBtn = document.getElementById('toggle-sidebar');
-const contentContainer = document.getElementById('content-container');
-const navItems = document.querySelectorAll('.nav-item');
+async function renderPageData(comics_name) {
 
-// Переключення стану бічної панелі
-toggleBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('expanded');
-  
-  // Зберігаємо стан у локальному сховищі
-  localStorage.setItem('sidebarExpanded', sidebar.classList.contains('expanded'));
-});
+  if (pageData?.["Том 1"]?.[0]) {
+      const issueData = pageData["Том 1"].find(issue => issue.id === "1") || pageData["Том 1"][0];
+      
+      mainContent.innerHTML = `
+          <div class="issue-container">
+            <div class="issue-header">
+                <div class="issue-title">
+                  <div class="series-title">${issueData.story_title || "Назва відсутня"}</div>
+                  <h1>Том 1 #<span id="issueNumber">${issueData.id}</span></h1>
+                </div>
+                <div class="issue-actions">
+                  <button id="editIssueButton">Редагувати</button>
+                </div>
+            </div>
+            
+            <div class="issue-content-layout">
+              <div class="issue-cover-container">
+                <img src="/api/placeholder/300/450" alt="Обкладинка коміксу" class="cover-image" id="coverImage">
+              </div>
+              
+              <div class="issue-details">
+                <div class="issue-info">
+                  <h2>Інформація про випуск</h2>
+                  
+                  <div class="info-group">
+                    <div class="info-item">
+                      <div class="info-label">Дата виходу:</div>
+                      <div class="info-value" id="releaseDate">${issueData.release || ""}</div>
+                    </div>
+                    <div class="info-item">
+                      <div class="info-label">Дата публікації:</div>
+                      <div class="info-value" id="publicationDate">${issueData.publication || ""}</div>
+                    </div>
+                    <div class="info-item">
+                      <div class="info-label">Головний редактор:</div>
+                      <div class="info-value" id="editorChief">${issueData.editor_chief || ""}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Вкладки для історій -->
+                <div class="stories-tabs">
+                  ${generateStoriesTabs(issueData)}
+                </div>
+              </div>
+            </div>
+          </div>
 
-// Відновлюємо стан бічної панелі при завантаженні
-document.addEventListener('DOMContentLoaded', () => {
-  const expanded = localStorage.getItem('sidebarExpanded') === 'true';
-  if (expanded) {
-    sidebar.classList.add('expanded');
+          <!-- HTML для модального вікна редагування -->
+          <div class="edit-modal" id="editModal">
+            <div class="edit-modal-content">
+              <div class="edit-modal-header">
+                <h2>Редагування випуску</h2>
+                <button class="close-edit-modal" id="closeEditModal">×</button>
+              </div>
+              
+              <form class="edit-form" id="editForm">
+                <div class="form-section">
+                  <h3>Основна інформація</h3>
+                  <div class="form-group">
+                    <label for="editId">ID випуску</label>
+                    <input type="text" id="editId" name="id" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="editCover">Обкладинка (шлях до файлу)</label>
+                    <input type="text" id="editCover" name="cover">
+                  </div>
+                  <div class="form-group">
+                    <label for="editRelease">Дата виходу</label>
+                    <input type="text" id="editRelease" name="release">
+                  </div>
+                  <div class="form-group">
+                    <label for="editPublication">Дата публікації</label>
+                    <input type="text" id="editPublication" name="publication">
+                  </div>
+                  <div class="form-group">
+                    <label for="editStoryTitle">Назва історії</label>
+                    <input type="text" id="editStoryTitle" name="story_title">
+                  </div>
+                  <div class="form-group">
+                    <label for="editEditorChief">Головний редактор</label>
+                    <input type="text" id="editEditorChief" name="editor_chief">
+                  </div>
+                </div>
+                
+                <div class="form-section">
+                  <h3>Творці</h3>
+                  <div class="form-group">
+                    <label for="editWriter">Автор</label>
+                    <input type="text" id="editWriter" name="writer">
+                  </div>
+                  <div class="form-group">
+                    <label for="editPenciler">Художник</label>
+                    <input type="text" id="editPenciler" name="penciler">
+                  </div>
+                  <div class="form-group">
+                    <label for="editInker">Інкер</label>
+                    <input type="text" id="editInker" name="inker">
+                  </div>
+                  <div class="form-group">
+                    <label for="editColorist">Колорист</label>
+                    <input type="text" id="editColorist" name="colorist">
+                  </div>
+                  <div class="form-group">
+                    <label for="editLetterer">Леттерер</label>
+                    <input type="text" id="editLetterer" name="letterer">
+                  </div>
+                  <div class="form-group">
+                    <label for="editEditor">Редактор</label>
+                    <input type="text" id="editEditor" name="editor">
+                  </div>
+                </div>
+                
+                <div class="form-section">
+                  <h3>Додаткові історії</h3>
+                  <div id="storyFormsContainer">
+                    <!-- Default first story form -->
+                    <div class="story-form" data-index="0">
+                      <h4>Історія 1</h4>
+                      <div class="form-group">
+                        <label for="editStoryTitle2">Назва історії</label>
+                        <input type="text" id="editStoryTitle2" name="story_title2">
+                      </div>
+                      <div class="form-group">
+                        <label for="editWriter2">Автор</label>
+                        <input type="text" id="editWriter2" name="writer2">
+                      </div>
+                      <div class="form-group">
+                        <label for="editPenciler2">Художник</label>
+                        <input type="text" id="editPenciler2" name="penciler2">
+                      </div>
+                      <div class="form-group">
+                        <label for="editInker2">Інкер</label>
+                        <input type="text" id="editInker2" name="inker2">
+                      </div>
+                      <div class="form-group">
+                        <label for="editColorist2">Колорист</label>
+                        <input type="text" id="editColorist2" name="colorist2">
+                      </div>
+                      <div class="form-group">
+                        <label for="editLetterer2">Леттерер</label>
+                        <input type="text" id="editLetterer2" name="letterer2">
+                      </div>
+                      <div class="form-group">
+                        <label for="editEditor2">Редактор</label>
+                        <input type="text" id="editEditor2" name="editor2">
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" class="add-story-button" id="addStoryButton">+ Додати історію</button>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="button" class="cancel-button" id="cancelEdit">Скасувати</button>
+                  <button type="submit" class="save-button">Зберегти</button>
+                </div>
+              </form>
+            </div>
+          </div>
+      `;
+
+      function generateStoriesTabs(issueData) {
+        // Збираємо всі ключі, що стосуються заголовків історій (story_title2, story_title3, ...)
+        const storyTitles = [];
+        
+        // Додаємо основну історію
+        storyTitles.push({
+          id: 'story1',
+          title: issueData.story_title || "Основна історія"
+        });
+        
+        // Шукаємо додаткові історії в об'єкті storys
+        if (issueData.storys) {
+          for (let i = 2; i <= 10; i++) { // Обмеження для безпеки - максимум 10 історій
+            const titleKey = `story_title${i}`;
+            if (issueData.storys[titleKey]) {
+              storyTitles.push({
+                id: `story${i}`,
+                title: issueData.storys[titleKey]
+              });
+            }
+          }
+        }
+        
+        // Генеруємо HTML для вкладок
+        let tabsHeaderHTML = '';
+        let tabsContentHTML = '';
+        
+        storyTitles.forEach((story, index) => {
+          // Вкладки
+          tabsHeaderHTML += `<button class="tab-button ${index === 0 ? 'active' : ''}" data-tab="${story.id}">${story.title}</button>`;
+          
+          // Контент для основної історії
+          if (index === 0) {
+            tabsContentHTML += `
+              <div class="tab-content ${index === 0 ? 'active' : ''}" id="${story.id}">
+                <h2>${story.title}</h2>
+                
+                <div class="info-group">
+                  <div class="info-item">
+                    <div class="info-label">Автор:</div>
+                    <div class="info-value" id="writer">${issueData.writer || ""}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Художник:</div>
+                    <div class="info-value" id="penciler">${issueData.penciler || ""}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Інкер:</div>
+                    <div class="info-value" id="inker">${issueData.inker || ""}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Колорист:</div>
+                    <div class="info-value" id="colorist">${issueData.colorist || ""}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Леттерер:</div>
+                    <div class="info-value" id="letterer">${issueData.letterer || ""}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Редактор:</div>
+                    <div class="info-value" id="editor">${issueData.editor || ""}</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            // Для додаткових історій (індекс в storyTitles починається з 0, а нумерація історій з 2)
+            const storyIndex = index + 1;
+            
+            tabsContentHTML += `
+              <div class="tab-content" id="${story.id}">
+                <h2>${story.title}</h2>
+                
+                <div class="info-group">
+                  <div class="info-item">
+                    <div class="info-label">Автор:</div>
+                    <div class="info-value">${issueData.storys[`writer${storyIndex}`] || ""}</div>
+                  </div>
+                  ${issueData.storys[`penciler${storyIndex}`] ? 
+                    `<div class="info-item">
+                      <div class="info-label">Художник:</div>
+                      <div class="info-value">${issueData.storys[`penciler${storyIndex}`]}</div>
+                    </div>` : ""}
+                  ${issueData.storys[`inker${storyIndex}`] ? 
+                    `<div class="info-item">
+                      <div class="info-label">Інкер:</div>
+                      <div class="info-value">${issueData.storys[`inker${storyIndex}`]}</div>
+                    </div>` : ""}
+                  ${issueData.storys[`colorist${storyIndex}`] ? 
+                    `<div class="info-item">
+                      <div class="info-label">Колорист:</div>
+                      <div class="info-value">${issueData.storys[`colorist${storyIndex}`]}</div>
+                    </div>` : ""}
+                  ${issueData.storys[`letterer${storyIndex}`] ? 
+                    `<div class="info-item">
+                      <div class="info-label">Леттерер:</div>
+                      <div class="info-value">${issueData.storys[`letterer${storyIndex}`]}</div>
+                    </div>` : ""}
+                  ${issueData.storys[`editor${storyIndex}`] ? 
+                    `<div class="info-item">
+                      <div class="info-label">Редактор:</div>
+                      <div class="info-value">${issueData.storys[`editor${storyIndex}`]}</div>
+                    </div>` : ""}
+                </div>
+              </div>
+            `;
+          }
+        });
+        
+        return `
+          <div class="tabs-header">
+            ${tabsHeaderHTML}
+          </div>
+          
+          ${tabsContentHTML}
+        `;
+      }
+
+      // Set up edit button click handler after rendering the page
+      setupModalHandlers(issueData);
+      
+      // Set up tabs functionality
+      setupTabs();
+  } else {
+      mainContent.innerHTML = `<span>Comics data is missing</span>`;
   }
-  
-  // Виділяємо активну сторінку на основі поточного URL
-  updateActiveNavItem();
-});
+}
 
-// Функція для виділення активного пункту навігації
-function updateActiveNavItem() {
-  const currentHash = window.location.hash || '#/';
+// Функція для налаштування вкладок
+function setupTabs() {
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabContents = document.querySelectorAll('.tab-content');
   
-  navItems.forEach(item => {
-    item.classList.remove('active');
-    
-    const itemHash = item.getAttribute('href');
-    if (currentHash.startsWith(itemHash)) {
-      item.classList.add('active');
-    }
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Деактивуємо всі вкладки
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+      
+      // Активуємо вибрану вкладку
+      button.classList.add('active');
+      const tabId = button.getAttribute('data-tab');
+      document.getElementById(tabId).classList.add('active');
+    });
   });
 }
 
-// Функція для рендеру сторінки персонажа
-function renderPage(type, id) {
-  let content = '';
+function setupModalHandlers(issueData) {
+  const editModal = document.getElementById('editModal');
+  const editIssueButton = document.getElementById('editIssueButton');
+  const closeEditModal = document.getElementById('closeEditModal');
+  const cancelEdit = document.getElementById('cancelEdit');
+  const editForm = document.getElementById('editForm');
+  const addStoryButton = document.getElementById('addStoryButton');
   
-  if (type === 'characters') {
-    content = `
-      <div class="page-header">
-        <h1>${id}</h1>
-      </div>
-      <div class="character-profile">
-        <div class="character-main-info">
-          <div class="character-avatar-large">
-            <img src="/api/placeholder/300/300" alt="${id}">
-          </div>
-          <div class="character-biography">
-            <h2>Біографія</h2>
-            <p>Детальна інформація про персонажа ${id} буде додана пізніше.</p>
-          </div>
-        </div>
-        
-        <div class="character-appearances">
-          <h2>Появи в коміксах</h2>
-          <div class="comics-list">
-            <p>Коміски з цим персонажем будуть додані пізніше.</p>
-          </div>
-        </div>
-      </div>
-    `;
-  } else {
-    content = `<h1>Сторінка не знайдена</h1>`;
-  }
+  // Fill form with current data
+  fillEditForm(issueData);
   
-  contentContainer.innerHTML = content;
-  updateActiveNavItem();
+  // Open modal when edit button is clicked
+  editIssueButton.addEventListener('click', () => {
+    editModal.style.display = 'flex';
+  });
+  
+  // Close modal when X button is clicked
+  closeEditModal.addEventListener('click', () => {
+    editModal.style.display = 'none';
+  });
+  
+  // Close modal when Cancel button is clicked
+  cancelEdit.addEventListener('click', () => {
+    editModal.style.display = 'none';
+  });
+  
+  // Add new story form
+  addStoryButton.addEventListener('click', addNewStoryForm);
+  
+  // Handle form submission
+  editForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    saveFormData();
+    editModal.style.display = 'none';
+  });
 }
 
-// Функція для рендеру даних щодо випуску або серії коміксів
-function renderPageData(type, fullName, comicsName, vol, issue = null) {
-  let content = '';
+function fillEditForm(issueData) {
+  // Fill main issue data
+  document.getElementById('editId').value = issueData.id || '';
+  document.getElementById('editCover').value = issueData.cover || '';
+  document.getElementById('editRelease').value = issueData.release || '';
+  document.getElementById('editPublication').value = issueData.publication || '';
+  document.getElementById('editStoryTitle').value = issueData.story_title || '';
+  document.getElementById('editEditorChief').value = issueData.editor_chief || '';
   
-  if (type === 'comics') {
-    content = `
-      <div class="page-header">
-        <h1>${comicsName}</h1>
-        <div class="page-subtitle">Том ${vol}</div>
-      </div>
-      <div class="comics-profile">
-        <div class="comics-info">
-          <div class="comics-cover-large">
-            <img src="/api/placeholder/250/380" alt="${comicsName}">
-          </div>
-          <div class="comics-details">
-            <h2>Інформація про серію</h2>
-            <ul class="info-list">
-              <li><strong>Назва:</strong> ${comicsName}</li>
-              <li><strong>Том:</strong> ${vol}</li>
-              <li><strong>Видавець:</strong> Marvel Comics</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="issues-list">
-          <h2>Випуски</h2>
-          <div class="issues-grid">
-            ${getIssuesContent(comicsName, vol)}
-          </div>
-        </div>
-      </div>
-    `;
-  } else if (type === 'issue') {
-    // Отримання даних про випуск з JSON
-    const issueData = getIssueData(vol, issue);
+  // Fill creators data
+  document.getElementById('editWriter').value = issueData.writer || '';
+  document.getElementById('editPenciler').value = issueData.penciler || '';
+  document.getElementById('editInker').value = issueData.inker || '';
+  document.getElementById('editColorist').value = issueData.colorist || '';
+  document.getElementById('editLetterer').value = issueData.letterer || '';
+  document.getElementById('editEditor').value = issueData.editor || '';
+  
+  // Fill story data if exists
+  if (issueData.storys) {
+    document.getElementById('editStoryTitle2').value = issueData.storys.story_title2 || '';
+    document.getElementById('editWriter2').value = issueData.storys.writer2 || '';
     
-    content = `
-      <div class="page-header">
-        <h1>${comicsName} #${issue}</h1>
-        <div class="page-subtitle">Том ${vol}</div>
-      </div>
-      <div class="issue-profile">
-        <div class="issue-info">
-          <div class="issue-cover-large">
-            <img src="/api/placeholder/250/380" alt="${comicsName} #${issue}">
-          </div>
-          <div class="issue-details">
-            <h2>Інформація про випуск</h2>
-            <ul class="info-list">
-              <li><strong>Назва:</strong> ${issueData?.story_title || 'Невідомо'}</li>
-              <li><strong>Дата виходу:</strong> ${issueData?.release || 'Невідомо'}</li>
-              <li><strong>Сценарист:</strong> ${issueData?.writer || 'Невідомо'}</li>
-              <li><strong>Художник:</strong> ${issueData?.penciler || 'Невідомо'}</li>
-              <li><strong>Інкер:</strong> ${issueData?.inker || 'Невідомо'}</li>
-              <li><strong>Колорист:</strong> ${issueData?.colorist || 'Невідомо'}</li>
-              <li><strong>Леттерер:</strong> ${issueData?.letterer || 'Невідомо'}</li>
-              <li><strong>Редактор:</strong> ${issueData?.editor || 'Невідомо'}</li>
-            </ul>
-          </div>
-        </div>
-        
-        ${issueData && issueData.storys ? `
-        <div class="additional-stories">
-          <h2>Додаткові історії</h2>
-          <div class="story-info">
-            <h3>${issueData.storys.story_title2 || 'Невідома історія'}</h3>
-            <ul class="info-list">
-              <li><strong>Сценарист:</strong> ${issueData.storys.writer2 || 'Невідомо'}</li>
-              ${issueData.storys.penciler2 ? `<li><strong>Художник:</strong> ${issueData.storys.penciler2}</li>` : ''}
-              ${issueData.storys.inker2 ? `<li><strong>Інкер:</strong> ${issueData.storys.inker2}</li>` : ''}
-              ${issueData.storys.colorist2 ? `<li><strong>Колорист:</strong> ${issueData.storys.colorist2}</li>` : ''}
-              ${issueData.storys.letterer2 ? `<li><strong>Леттерер:</strong> ${issueData.storys.letterer2}</li>` : ''}
-              ${issueData.storys.editor2 ? `<li><strong>Редактор:</strong> ${issueData.storys.editor2}</li>` : ''}
-            </ul>
-          </div>
-        </div>
-        ` : ''}
-        
-        <div class="issue-characters">
-          <h2>Персонажі</h2>
-          <p>Інформація про персонажів цього випуску буде додана пізніше.</p>
-        </div>
-      </div>
-    `;
-  } else {
-    content = `<h1>Сторінка не знайдена</h1>`;
+    // Only set these if they exist in the story data
+    if (document.getElementById('editPenciler2')) {
+      document.getElementById('editPenciler2').value = issueData.storys.penciler2 || '';
+    }
+    if (document.getElementById('editInker2')) {
+      document.getElementById('editInker2').value = issueData.storys.inker2 || '';
+    }
+    if (document.getElementById('editColorist2')) {
+      document.getElementById('editColorist2').value = issueData.storys.colorist2 || '';
+    }
+    if (document.getElementById('editLetterer2')) {
+      document.getElementById('editLetterer2').value = issueData.storys.letterer2 || '';
+    }
+    if (document.getElementById('editEditor2')) {
+      document.getElementById('editEditor2').value = issueData.storys.editor2 || '';
+    }
   }
-  
-  contentContainer.innerHTML = content;
-  updateActiveNavItem();
 }
 
-// Функція для отримання даних про випуск
-function getIssueData(vol, issue) {
-  // Це приклад, дані мають завантажуватись з вашого JSON файлу
-  // В реальному додатку тут буде запит до API або локальної бази даних
-  const sampleData = {
-    "1": [
-      { "id": "-1", "cover": "", "release": "05-14-1997", "publication": "1-7-1997", "image1_artist1": "Joe Bennett", "image1_artist2": "Joe Pimentel", "editor_chief": "Bob Harras", "story_title": "Куди зникли всі герої?; Where Have All the Heroes Gone", "writer": "Tom DeFalco", "penciler": "Joe Bennett", "inker": "Bud LaRosa", "colorist": "Bob Sharen", "letterer": "Richard Starkings", "editor": "Ralph Macchio", "event": "Flashback (Event)", 
-      "storys": {
-        "story_title2": "The Secrets of Peter Parker!", "writer2": "Tom DeFalco"
-        }
-      },
-      { "id": "1", "cover": "d/d5/Amazing_Spider-Man_Vol_1_1.jpg", "release": "12-10-1962", "publication": "1-3-1963", "story_title": "Людина-павук", "image1_artist": "Jack Kirby, Steve Ditko, Stan Goldberg and Artie Simek", "editor_chief": "Stan Lee", "writer": "Stan Lee, Steve Ditko", "penciler": "Steve Ditko", "inker": "Steve Ditko", "colorist": "Stan Goldberg", "letterer": "Jon D'Agostino", "editor": "Stan Lee",
-      "storys": {
-        "story_title2": "Людина-павук проти Хамелеона!", "writer2": "Stan Lee\nSteve Ditko", "penciler2": "Steve Ditko", "inker2": "Steve Ditko", "colorist2": "Stan Goldberg", "letterer2": "John Duffy", "editor2": "Stan Lee"
-        }
-      },
-      { "id": "2", "release": "02-12-1963", "publication": "1-5-1963", "image1_artist1": "Steve Ditko", "editor_chief": "Stan Lee", "story_title": "Duel to the Death with the Vulture!", "writer": "Stan Lee", "writer_2": "Steve Ditko", "penciler": "Steve Ditko", "inker": "Steve Ditko", "colorist": "", "letterer": "John Duffy", "editor": "Stan Lee", "story_title2": "The Uncanny Threat of the Terrible Tinkerer!", "writer2": "Stan Lee"}
-    ]
+function addNewStoryForm() {
+  const storyFormsContainer = document.getElementById('storyFormsContainer');
+  const storyForms = storyFormsContainer.querySelectorAll('.story-form');
+  const newIndex = storyForms.length;
+  
+  // Індекс для імені полів (story_title2, story_title3, ...)
+  const formIndex = newIndex + 2;
+  
+  const newStoryForm = document.createElement('div');
+  newStoryForm.className = 'story-form';
+  newStoryForm.dataset.index = newIndex;
+  
+  newStoryForm.innerHTML = `
+    <h4>Історія ${newIndex + 1}</h4>
+    <div class="form-group">
+      <label for="editStoryTitle${formIndex}">Назва історії</label>
+      <input type="text" id="editStoryTitle${formIndex}" name="story_title${formIndex}">
+    </div>
+    <div class="form-group">
+      <label for="editWriter${formIndex}">Автор</label>
+      <input type="text" id="editWriter${formIndex}" name="writer${formIndex}">
+    </div>
+    <div class="form-group">
+      <label for="editPenciler${formIndex}">Художник</label>
+      <input type="text" id="editPenciler${formIndex}" name="penciler${formIndex}">
+    </div>
+    <div class="form-group">
+      <label for="editInker${formIndex}">Інкер</label>
+      <input type="text" id="editInker${formIndex}" name="inker${formIndex}">
+    </div>
+    <div class="form-group">
+      <label for="editColorist${formIndex}">Колорист</label>
+      <input type="text" id="editColorist${formIndex}" name="colorist${formIndex}">
+    </div>
+    <div class="form-group">
+      <label for="editLetterer${formIndex}">Леттерер</label>
+      <input type="text" id="editLetterer${formIndex}" name="letterer${formIndex}">
+    </div>
+    <div class="form-group">
+      <label for="editEditor${formIndex}">Редактор</label>
+      <input type="text" id="editEditor${formIndex}" name="editor${formIndex}">
+    </div>
+    <button type="button" class="remove-story-button">- Видалити історію</button>
+  `;
+  
+  storyFormsContainer.appendChild(newStoryForm);
+  
+  // Add event listener to the remove button
+  const removeButton = newStoryForm.querySelector('.remove-story-button');
+  removeButton.addEventListener('click', () => {
+    newStoryForm.remove();
+    updateStoryFormNumbers();
+  });
+}
+
+function updateStoryFormNumbers() {
+  const storyForms = document.querySelectorAll('.story-form');
+  storyForms.forEach((form, index) => {
+    form.querySelector('h4').textContent = `Історія ${index + 1}`;
+    form.dataset.index = index;
+  });
+}
+
+function saveFormData() {
+  // Get the form data
+  const formData = {
+    id: document.getElementById('editId').value,
+    cover: document.getElementById('editCover').value,
+    release: document.getElementById('editRelease').value,
+    publication: document.getElementById('editPublication').value,
+    story_title: document.getElementById('editStoryTitle').value,
+    editor_chief: document.getElementById('editEditorChief').value,
+    writer: document.getElementById('editWriter').value,
+    penciler: document.getElementById('editPenciler').value,
+    inker: document.getElementById('editInker').value,
+    colorist: document.getElementById('editColorist').value,
+    letterer: document.getElementById('editLetterer').value,
+    editor: document.getElementById('editEditor').value,
+    storys: {}
   };
-
-  // Знаходимо випуск за номером
-  const issues = sampleData["1"];
-  return issues.find(item => item.id === issue);
-}
-
-// Функція для генерації HTML для списку випусків
-function getIssuesContent(comicsName, vol) {
-  // Це приклад, тут має бути динамічне завантаження списку випусків
-  // В даному випадку використовуємо дані з JSON
-  const issuesHTML = [];
   
-  // Приклад даних для Amazing Spider-Man
-  if (comicsName === "Дивовижна Людина-павук" && vol === "1") {
-    for (let i = 1; i <= 3; i++) {
-      issuesHTML.push(`
-        <div class="issue-card">
-          <div class="issue-cover">
-            <img src="/api/placeholder/150/230" alt="${comicsName} #${i}">
-          </div>
-          <div class="issue-info">
-            <h3>${comicsName} #${i}</h3>
-            <a href="#/articles/comics/${comicsName} Том ${vol} ${i}" class="button-primary">Деталі</a>
-          </div>
-        </div>
-      `);
-    }
-  } else {
-    // Для інших випусків
-    issuesHTML.push(`<p>Інформація про випуски буде додана пізніше.</p>`);
-  }
+  // Збираємо дані з усіх форм історій
+  const storyForms = document.querySelectorAll('.story-form');
   
-  return issuesHTML.join('');
-}
-
-// Домашня сторінка
-function renderHomePage() {
-  // Вже наявний HTML у index.html для домашньої сторінки
-  // Нічого не робимо, оскільки контент вже відображається
-  updateActiveNavItem();
-}
-
-// Сторінка серій коміксів
-function renderComicsPage() {
-  let content = `
-    <div class="page-header">
-      <h1>Серії коміксів</h1>
-    </div>
-    <div class="comics-grid large-grid">
-      <div class="comic-card">
-        <div class="comic-cover">
-          <img src="/api/placeholder/200/300" alt="Дивовижна Людина-павук">
-        </div>
-        <div class="comic-info">
-          <h3>Дивовижна Людина-павук</h3>
-          <p>Том 1</p>
-          <a href="#/articles/comics/Дивовижна Людина-павук Том 1" class="button-primary">Деталі</a>
-        </div>
-      </div>
-      
-      <div class="comic-card">
-        <div class="comic-cover">
-          <img src="/api/placeholder/200/300" alt="Месники">
-        </div>
-        <div class="comic-info">
-          <h3>Месники</h3>
-          <p>Том 1</p>
-          <a href="#/articles/comics/Месники Том 1" class="button-primary">Деталі</a>
-        </div>
-      </div>
-      
-      <div class="comic-card">
-        <div class="comic-cover">
-          <img src="/api/placeholder/200/300" alt="Люди Ікс">
-        </div>
-        <div class="comic-info">
-          <h3>Люди Ікс</h3>
-          <p>Том 1</p>
-          <a href="#/articles/comics/Люди Ікс Том 1" class="button-primary">Деталі</a>
-        </div>
-      </div>
-      
-      <div class="comic-card">
-        <div class="comic-cover">
-          <img src="/api/placeholder/200/300" alt="Фантастична четвірка">
-        </div>
-        <div class="comic-info">
-          <h3>Фантастична четвірка</h3>
-          <p>Том 1</p>
-          <a href="#/articles/comics/Фантастична четвірка Том 1" class="button-primary">Деталі</a>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  contentContainer.innerHTML = content;
-  updateActiveNavItem();
-}
-
-// Сторінка персонажів
-function renderCharactersPage() {
-  let content = `
-    <div class="page-header">
-      <h1>Персонажі</h1>
-    </div>
-    <div class="characters-grid large-grid">
-      <div class="character-card">
-        <div class="character-avatar">
-          <img src="/api/placeholder/150/150" alt="Людина-павук">
-        </div>
-        <h3>Людина-павук</h3>
-        <a href="#/articles/characters/Людина-павук" class="button-secondary">Профіль</a>
-      </div>
-      
-      <div class="character-card">
-        <div class="character-avatar">
-          <img src="/api/placeholder/150/150" alt="Залізна людина">
-        </div>
-        <h3>Залізна людина</h3>
-        <a href="#/articles/characters/Залізна-людина" class="button-secondary">Профіль</a>
-      </div>
-      
-      <div class="character-card">
-        <div class="character-avatar">
-          <img src="/api/placeholder/150/150" alt="Капітан Америка">
-        </div>
-        <h3>Капітан Америка</h3>
-        <a href="#/articles/characters/Капітан-Америка" class="button-secondary">Профіль</a>
-      </div>
-      
-      <div class="character-card">
-        <div class="character-avatar">
-          <img src="/api/placeholder/150/150" alt="Тор">
-        </div>
-        <h3>Тор</h3>
-        <a href="#/articles/characters/Тор" class="button-secondary">Профіль</a>
-      </div>
-    </div>
-  `;
-  
-  contentContainer.innerHTML = content;
-  updateActiveNavItem();
-}
-
-// Сторінка творців
-function renderCreatorsPage() {
-  let content = `
-    <div class="page-header">
-      <h1>Творці</h1>
-    </div>
-    <div class="creators-grid">
-      <div class="creator-card">
-        <div class="creator-avatar">
-          <img src="/api/placeholder/150/150" alt="Stan Lee">
-        </div>
-        <h3>Stan Lee</h3>
-        <p>Сценарист, Редактор</p>
-        <a href="#/creators/stan-lee" class="button-secondary">Профіль</a>
-      </div>
-      
-      <div class="creator-card">
-        <div class="creator-avatar">
-          <img src="/api/placeholder/150/150" alt="Steve Ditko">
-        </div>
-        <h3>Steve Ditko</h3>
-        <p>Художник, Сценарист</p>
-        <a href="#/creators/steve-ditko" class="button-secondary">Профіль</a>
-      </div>
-      
-      <div class="creator-card">
-        <div class="creator-avatar">
-          <img src="/api/placeholder/150/150" alt="Jack Kirby">
-        </div>
-        <h3>Jack Kirby</h3>
-        <p>Художник</p>
-        <a href="#/creators/jack-kirby" class="button-secondary">Профіль</a>
-      </div>
-    </div>
-  `;
-  
-  contentContainer.innerHTML = content;
-  updateActiveNavItem();
-}
-
-// Налаштування роутера
-router
-  .on('/', () => {
-    renderHomePage();
-  })
-  .on('/comics', () => {
-    renderComicsPage();
-  })
-  .on('/issues', () => {
-    contentContainer.innerHTML = '<h1>Випуски</h1><p>Сторінка в розробці</p>';
-    updateActiveNavItem();
-  })
-  .on('/characters', () => {
-    renderCharactersPage();
-  })
-  .on('/creators', () => {
-    renderCreatorsPage();
-  })
-  .on('/articles/characters/:character', (match) => {
-    renderPage('characters', match.data.character);
-  })
-  .on('/articles/comics/:comics', (match) => {
-    const comics_name = match.data.comics.split(' Том')[0]; // Дивовижна Людина-павук
-    let vol = match.data.comics.split('Том ')[1]; // 1_1 або 1
-    let issue;
+  storyForms.forEach((form, index) => {
+    // Отримуємо суфікс для ключів об'єкта (2, 3, 4, ...)
+    const suffix = index + 2;
     
-    if (vol && vol.includes(' ')) {
-      [vol, issue] = vol.split(' ');
-      renderPageData('issue', match.data.comics, comics_name, vol, issue);
+    // Збираємо всі поля історії
+    const titleField = form.querySelector(`[name="story_title${suffix}"]`);
+    const writerField = form.querySelector(`[name="writer${suffix}"]`);
+    const pencilerField = form.querySelector(`[name="penciler${suffix}"]`);
+    const inkerField = form.querySelector(`[name="inker${suffix}"]`);
+    const coloristField = form.querySelector(`[name="colorist${suffix}"]`);
+    const lettererField = form.querySelector(`[name="letterer${suffix}"]`);
+    const editorField = form.querySelector(`[name="editor${suffix}"]`);
+    
+    // Додаємо поля, якщо вони існують і мають значення
+    if (titleField && titleField.value) {
+      formData.storys[`story_title${suffix}`] = titleField.value;
+    }
+    
+    if (writerField && writerField.value) {
+      formData.storys[`writer${suffix}`] = writerField.value;
+    }
+    
+    if (pencilerField && pencilerField.value) {
+      formData.storys[`penciler${suffix}`] = pencilerField.value;
+    }
+    
+    if (inkerField && inkerField.value) {
+      formData.storys[`inker${suffix}`] = inkerField.value;
+    }
+    
+    if (coloristField && coloristField.value) {
+      formData.storys[`colorist${suffix}`] = coloristField.value;
+    }
+    
+    if (lettererField && lettererField.value) {
+      formData.storys[`letterer${suffix}`] = lettererField.value;
+    }
+    
+    if (editorField && editorField.value) {
+      formData.storys[`editor${suffix}`] = editorField.value;
+    }
+  });
+  
+  // Send data to server to update JSON file
+  fetch('/api/update-comic', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      comicName: currentComicName,
+      issueId: formData.id,
+      issueData: formData
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Дані успішно збережено!');
+      // Reload the page data to show updated content
+      renderPageData(currentComicName);
     } else {
-      renderPageData('comics', match.data.comics, comics_name, vol);
+      alert('Помилка при збереженні даних: ' + data.error);
     }
   })
-  .notFound(() => {
-    contentContainer.innerHTML = '<h1>Сторінка не знайдена</h1>';
-    updateActiveNavItem();
-  })
-  .resolve();
-
-// Обробка зміни URL для оновлення активного пункту меню
-window.addEventListener('hashchange', updateActiveNavItem);
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Помилка при збереженні даних.');
+  });
+}

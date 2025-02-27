@@ -8,154 +8,107 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Бічна панель навігації -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-book-open"></i>
-                    <span class="logo-text">КоміксПедія</span>
-                </div>
-                <button id="toggle-sidebar" class="toggle-btn">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li>
-                        <a href="#/" class="nav-item active">
-                            <i class="fas fa-home"></i>
-                            <span class="nav-text">Головна</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/comics" class="nav-item">
-                            <i class="fas fa-book"></i>
-                            <span class="nav-text">Серії коміксів</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/issues" class="nav-item">
-                            <i class="fas fa-bookmark"></i>
-                            <span class="nav-text">Випуски</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/characters" class="nav-item">
-                            <i class="fas fa-mask"></i>
-                            <span class="nav-text">Персонажі</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/creators" class="nav-item">
-                            <i class="fas fa-pen-fancy"></i>
-                            <span class="nav-text">Творці</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Основний контент -->
-        <main class="main-content">
-            <header class="content-header">
-                <h1>Комікс Енциклопедія</h1>
-                <div class="search-bar">
-                    <input type="text" placeholder="Пошук...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-            </header>
-            
-            <div id="content-container">
-                <section class="section-latest">
-                    <h2>Останні додані серії коміксів</h2>
-                    <div class="comics-grid">
-                        <div class="comic-card">
-                            <div class="comic-cover">
-                                <img src="/api/placeholder/180/280" alt="Дивовижна Людина-павук">
-                            </div>
-                            <div class="comic-info">
-                                <h3>Дивовижна Людина-павук</h3>
-                                <p>Том 1</p>
-                                <a href="#/articles/comics/Дивовижна Людина-павук Том 1" class="button-primary">Деталі</a>
-                            </div>
-                        </div>
-                        
-                        <div class="comic-card">
-                            <div class="comic-cover">
-                                <img src="/api/placeholder/180/280" alt="Месники">
-                            </div>
-                            <div class="comic-info">
-                                <h3>Месники</h3>
-                                <p>Том 1</p>
-                                <a href="#/articles/comics/Месники Том 1" class="button-primary">Деталі</a>
-                            </div>
-                        </div>
-                        
-                        <div class="comic-card">
-                            <div class="comic-cover">
-                                <img src="/api/placeholder/180/280" alt="Люди Ікс">
-                            </div>
-                            <div class="comic-info">
-                                <h3>Люди Ікс</h3>
-                                <p>Том 1</p>
-                                <a href="#/articles/comics/Люди Ікс Том 1" class="button-primary">Деталі</a>
-                            </div>
-                        </div>
-                        
-                        <div class="comic-card">
-                            <div class="comic-cover">
-                                <img src="/api/placeholder/180/280" alt="Фантастична четвірка">
-                            </div>
-                            <div class="comic-info">
-                                <h3>Фантастична четвірка</h3>
-                                <p>Том 1</p>
-                                <a href="#/articles/comics/Фантастична четвірка Том 1" class="button-primary">Деталі</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <section class="section-popular">
-                    <h2>Популярні персонажі</h2>
-                    <div class="characters-grid">
-                        <div class="character-card">
-                            <div class="character-avatar">
-                                <img src="/api/placeholder/150/150" alt="Людина-павук">
-                            </div>
-                            <h3>Людина-павук</h3>
-                            <a href="#/articles/characters/Людина-павук" class="button-secondary">Профіль</a>
-                        </div>
-                        
-                        <div class="character-card">
-                            <div class="character-avatar">
-                                <img src="/api/placeholder/150/150" alt="Залізна людина">
-                            </div>
-                            <h3>Залізна людина</h3>
-                            <a href="#/articles/characters/Залізна-людина" class="button-secondary">Профіль</a>
-                        </div>
-                        
-                        <div class="character-card">
-                            <div class="character-avatar">
-                                <img src="/api/placeholder/150/150" alt="Капітан Америка">
-                            </div>
-                            <h3>Капітан Америка</h3>
-                            <a href="#/articles/characters/Капітан-Америка" class="button-secondary">Профіль</a>
-                        </div>
-                        
-                        <div class="character-card">
-                            <div class="character-avatar">
-                                <img src="/api/placeholder/150/150" alt="Тор">
-                            </div>
-                            <h3>Тор</h3>
-                            <a href="#/articles/characters/Тор" class="button-secondary">Профіль</a>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
+  <!-- Header Navigation -->
+  <header>
+    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+    <div class="logo">
+      <img src="" alt="Логотип">
+      <span>Коміксова Енциклопедія</span>
     </div>
+    <div class="header-controls">
+      <button class="search-button" id="searchButton">🔍</button>
+    </div>
+  </header>
+  
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <h3>Категорії</h3>
+    <ul>
+      <li><a href="#">Видавництва</a></li>
+      <li><a href="#">Серії</a></li>
+      <li><a href="#">Персонажі</a></li>
+      <li><a href="#">Автори</a></li>
+      <li><a href="#">Художники</a></li>
+    </ul>
     
+    <h3>Популярні серії</h3>
+    <ul>
+      <li><a href="#">Людина-павук</a></li>
+      <li><a href="#">Бетмен</a></li>
+      <li><a href="#">Месники</a></li>
+      <li><a href="#">Супермен</a></li>
+      <li><a href="#">Люди Ікс</a></li>
+    </ul>
+    
+    <h3>Останні оновлення</h3>
+    <ul>
+      <li><a href="#">Дивовижна Людина-павук #2</a></li>
+      <li><a href="#">Дивовижна Людина-павук #1</a></li>
+      <li><a href="#">Дивовижна Людина-павук #-1</a></li>
+    </ul>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <section class="hero-section">
+      <h1>Ласкаво просимо до Коміксової Енциклопедії</h1>
+      <p>Ваше джерело інформації про всі комікси світу</p>
+    </section>
+    
+    <section>
+      <h2>Вибрані комікси</h2>
+      <div class="featured-comics">
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Дивовижна Людина-павук #1</h3>
+            <p>Стен Лі, Стів Дітко</p>
+            <p>12-10-1962</p>
+          </div>
+        </div>
+        
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Дивовижна Людина-павук #2</h3>
+            <p>Стен Лі, Стів Дітко</p>
+            <p>02-12-1963</p>
+          </div>
+        </div>
+        
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Дивовижна Людина-павук #-1</h3>
+            <p>Том ДеФалко, Джо Беннетт</p>
+            <p>05-14-1997</p>
+          </div>
+        </div>
+        
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Приклад коміксу</h3>
+            <p>Автор, Художник</p>
+            <p>01-01-2023</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Search Modal -->
+  <div class="modal" id="searchModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Пошук</h2>
+        <button class="close-modal" id="closeModal">×</button>
+      </div>
+      <form class="search-form">
+        <input type="text" placeholder="Введіть назву коміксу, ім'я персонажа, автора...">
+      </form>
+    </div>
+  </div>
     <script type="module" src="js.js"></script>
 </body>
 </html>

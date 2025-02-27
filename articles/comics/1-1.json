@@ -1,0 +1,13 @@
+[
+  { "id": "-1", "cover": "", "release": "05-14-1997", "publication": "1-7-1997", "image1_artist1": "Joe Bennett", "image1_artist2": "Joe Pimentel", "editor_chief": "Bob Harras", "story_title": "Куди зникли всі герої?; Where Have All the Heroes Gone", "writer": "Tom DeFalco", "penciler": "Joe Bennett", "inker": "Bud LaRosa", "colorist": "Bob Sharen", "letterer": "Richard Starkings", "editor": "Ralph Macchio", "event": "Flashback (Event)", 
+  "storys": {
+    "story_title2": "The Secrets of Peter Parker!", "writer2": "Tom DeFalco"
+    }
+  },
+  { "id": "1", "cover": "d/d5/Amazing_Spider-Man_Vol_1_1.jpg", "release": "12-10-1962", "publication": "1-3-1963", "story_title": "Людина-павук", "image1_artist": "Jack Kirby, Steve Ditko, Stan Goldberg and Artie Simek", "editor_chief": "Stan Lee", "writer": "Stan Lee, Steve Ditko", "penciler": "Steve Ditko", "inker": "Steve Ditko", "colorist": "Stan Goldberg", "letterer": "Jon D'Agostino", "editor": "Stan Lee",
+  "storys": {
+    "story_title2": "Людина-павук проти Хамелеона!", "writer2": "Stan Lee\nSteve Ditko", "penciler2": "Steve Ditko", "inker2": "Steve Ditko", "colorist2": "Stan Goldberg", "letterer2": "John Duffy", "editor2": "Stan Lee"
+    }
+  },
+  { "id": "2", "release": "02-12-1963", "publication": "1-5-1963", "image1_artist1": "Steve Ditko", "editor_chief": "Stan Lee", "story_title": "Duel to the Death with the Vulture!", "writer": "Stan Lee", "writer_2": "Steve Ditko", "penciler": "Steve Ditko", "inker": "Steve Ditko", "colorist": "", "letterer": "John Duffy", "editor": "Stan Lee", "story_title2": "The Uncanny Threat of the Terrible Tinkerer!", "writer2": "Stan Lee"}
+]
