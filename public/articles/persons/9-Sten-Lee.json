@@ -1,0 +1,21 @@
+{
+  "id": 9,
+  "name": "Sten Lee",
+  "ua_name": "Стен Лі",
+  "references": {
+    "comics_editor_chief": [
+      "Marvel/1-1/1"
+    ],
+    "comics_writer": [
+      "Marvel/1-1/1"
+    ],
+    "comics_editor": [
+      "Marvel/1-1/1"
+    ]
+  },
+  "work_types": [
+    "editor_chief",
+    "writer",
+    "editor"
+  ]
+}

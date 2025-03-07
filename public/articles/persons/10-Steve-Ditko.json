@@ -1,0 +1,21 @@
+{
+  "id": 10,
+  "name": "Steve Ditko",
+  "ua_name": "Стів Дітко",
+  "references": {
+    "comics_writer": [
+      "Marvel/1-1/1"
+    ],
+    "comics_penciler": [
+      "Marvel/1-1/1"
+    ],
+    "comics_inker": [
+      "Marvel/1-1/1"
+    ]
+  },
+  "work_types": [
+    "writer",
+    "penciler",
+    "inker"
+  ]
+}

@@ -1,0 +1,99 @@
+/* Sidebar Styles */
+aside {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: var(--header-height);
+/*  bottom: 0;*/
+/*  padding: 1em .5em;*/
+  margin: 1em .5em;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--dark-color);
+  background-color: var(--light-hsl-80);
+  box-shadow: var(--box-shadow);
+  backdrop-filter: blur(10px);
+/*  transform: translateX(-100%);*/
+  transition: 2s ;
+  z-index: 10;
+}
+
+aside.active {
+  justify-content: unset;
+  align-items: flex-start;
+/*  transform: unset;*/
+}
+
+aside :is(h3, span, .popular-articles) {
+  display: none;
+}
+aside.active :is(h3, span, .popular-articles) {
+  display: block;
+}
+
+#sidebarToggle {
+/*  right: 0;*/
+  width: 30px;
+/*  margin-bottom: calc(.5em - 3px);*/
+  font-size: unset;
+  padding: .3em;
+  margin: 0 .5em;
+/*  margin: 0 calc(.5em + 2px);*/
+  border: 1px solid transparent;
+  cursor: pointer;
+/*  border-bottom: 1px solid var(--dark-hsl-20);*/
+}
+aside.active #sidebarToggle {
+/*  float: right;*/
+/*  position: absolute;*/
+/*  right: 0;*/
+/*  margin-bottom: 0;*/
+}
+aside:not(.active) .sidebar-toggle {
+}
+
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+  margin-bottom: .5em ;
+/*  border-top: 1px solid var(--dark-hsl-20);*/
+}
+aside:not(.active) .sidebar-buttons {
+/*  align-items: center;*/
+}
+
+aside h3 {
+  border-bottom: 1px solid var(--dark-hsl-20);
+  color: var(--dark-color);
+  padding: .5em;
+  margin-bottom: .5em;
+  font-size: .8rem;
+  color: var(--dark-hsl-50);
+}
+
+aside.active a i {
+/*  margin-right: .5em;*/
+}
+aside a {
+  border: 1px solid var(--dark-hsl-20);
+  display: flex;
+  gap: .5em;
+  padding: .3em;
+  margin: 0 .5em;
+  text-decoration: none;
+  color: currentColor;
+  border-radius: var(--border-radius);
+  transition: .2s;
+}
+aside:not(.active) a {
+    justify-content: center;
+  width: 30px;
+  aspect-ratio: 1/1;
+}
+aside a:hover {
+  color: var(--secondary-color);
+  background: var(--dark-hsl-05);
+}

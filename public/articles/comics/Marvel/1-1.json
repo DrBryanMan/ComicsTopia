@@ -1,0 +1,40 @@
+{
+  "issues": [
+    {
+      "id": "1",
+      "cover": "https://comicvine.gamespot.com/a/uploads/original/11/117763/2676366-amazingspiderman001.jpg",
+      "release": "12-10-1962",
+      "publication": "1-3-1963",
+      "story_title": "Людина-павук",
+      "editor_chief": "9-Стен Лі",
+      "writer": "9-Стен Лі",
+      "writer2": "10-Стів Дітко",
+      "penciler": "10-Стів Дітко",
+      "inker": "10-Стів Дітко",
+      "colorist": "11-Stan Goldberg",
+      "letterer": "12-Jon D'Agostino",
+      "editor": "9-Стен Лі",
+      "storys": [
+        {
+          "story_title": "Людина-павук проти Хамелеона!",
+          "writer": "9-Стен Лі",
+          "writer2": "10-Стів Дітко",
+          "penciler": "10-Стів Дітко",
+          "inker": "10-Стів Дітко",
+          "colorist": "11-Stan Goldberg",
+          "letterer": "13-John Duffy",
+          "editor": "9-Стен Лі"
+        }
+      ],
+      "characters": [
+        "1-Peter Parker:616|Peter Parker/Spider-Man|main/first",
+        "1-Peter Parker:616|Peter Parker/Spider-Man|vil",
+        "1-Peter Parker:616|Peter Parker/Spider-Man|cameo",
+        "1-Peter Parker:616|Peter Parker/Spider-Man|sec",
+        "1-Peter Parker:616|Peter Parker/Spider-Man|fb",
+        "1-Peter Parker:616|Peter Parker/Spider-Man|sec/dead",
+        "2-May Reilly:616|Aunt May|sec"
+      ]
+    }
+  ]
+}

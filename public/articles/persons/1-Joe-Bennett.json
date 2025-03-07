@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "Joe Bennett",
+  "ua_name": "",
+  "references": {
+    "comics_image_artist": [
+      "Marvel/1-1/-1"
+    ],
+    "comics_penciler": [
+      "Marvel/1-1/-1"
+    ]
+  },
+  "work_types": [
+    "image_artist",
+    "penciler"
+  ]
+}

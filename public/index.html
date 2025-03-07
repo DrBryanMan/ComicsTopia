@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComicsTopia</title>
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <!-- Верхня навігація -->
+  <header>
+    <div class="logo">
+      <i class="bi bi-file-image"></i>
+      <span>ComicsTopia</span>
+    </div>
+    <div class="header-controls">
+      <button class="search-button" id="buttonSearch" onclick="modalSearch.showModal()"><i class="bi bi-search"></i></button>
+    </div>
+  </header>
+  
+  <!-- Модалка пошуку -->
+  <dialog class="modal" id="modalSearch">
+    <div class="modal-header">
+      <select id="optionsSearch" name="options">
+          <option value="1">Серія коміксів</option>
+          <option value="2">Випуски</option>
+          <option value="3">Видавництва</option>
+          <option value="4">Творці</option>
+      </select>
+      <input type="text" placeholder="Введіть назву коміксу, ім'я персонажа, автора...">
+    </div>
+    <div id="modalResults" class="modal-content">Агов, ніхуя не знайдено!</div>
+  </dialog>
+  
+  <!-- Бічна навігація -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle"><i class="bi bi-layout-sidebar-inset"></i></button>
+    <div class="sidebar-buttons">
+      <a href="#/publishers"><i class="bi bi-globe"></i><span>Видавництва</span></a>
+      <a href="#/comicseries"><i class="bi bi-layers"></i><span>Серії</span></a>
+      <a href="#/comicissues"><i class="bi bi-book"></i><span>Випуски</span></a>
+      <a href="#/characters"><i class="bi bi-file-person"></i><span>Персонажі</span></a>
+      <a href="#/creators"><i class="bi bi-people"></i><span>Автори</span></a>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <section class="hero-section">
+      <h1>Ласкаво просимо до Коміксової Енциклопедії</h1>
+      <p>Ваше джерело інформації про всі комікси світу</p>
+    </section>
+    
+    <section>
+      <h2>Вибрані комікси</h2>
+      <div class="featured-comics">
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Дивовижна Людина-павук #1</h3>
+            <p>Стен Лі, Стів Дітко</p>
+            <p>12-10-1962</p>
+          </div>
+        </div>
+        
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Дивовижна Людина-павук #2</h3>
+            <p>Стен Лі, Стів Дітко</p>
+            <p>02-12-1963</p>
+          </div>
+        </div>
+        
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Дивовижна Людина-павук #-1</h3>
+            <p>Том ДеФалко, Джо Беннетт</p>
+            <p>05-14-1997</p>
+          </div>
+        </div>
+        
+        <div class="comic-card">
+          <img src="/api/placeholder/200/280" alt="Комікс">
+          <div class="comic-info">
+            <h3>Приклад коміксу</h3>
+            <p>Автор, Художник</p>
+            <p>01-01-2023</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+    <script type="module" src="js.js"></script>
+</body>
+</html>
